@@ -1,6 +1,7 @@
-'use client'
+"use client"
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 export default function ThreeScene() {
   const mountRef = useRef(null);
@@ -8,6 +9,7 @@ export default function ThreeScene() {
   const isResizing = useRef(false);
   const rendererRef = useRef(null);
   const cameraRef = useRef(null);
+  const sceneRef = useRef(null);
 
   useEffect(() => {
     // Set initial width to 90% of the window's inner width
@@ -17,10 +19,12 @@ export default function ThreeScene() {
   useEffect(() => {
     const mount = mountRef.current;
 
-    // Scene setup
+    // SETUP
     const scene = new THREE.Scene();
+    sceneRef.current = scene;
+
     const camera = new THREE.PerspectiveCamera(75, width / mount.clientHeight, 0.1, 1000);
-    camera.position.z = 5;
+    camera.position.set(5, 5, 5);
     cameraRef.current = camera;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -28,26 +32,61 @@ export default function ThreeScene() {
     mount.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
-    // Cube setup
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.mouseButtons = {
+      LEFT: null,       // Disable left click panning
+      RIGHT: null,      // Disable right click panning
+      MIDDLE: THREE.MOUSE.ROTATE // Enable middle mouse for rotation
+    };
+    controls.rotateSpeed = 1;
+
+
+    // change background color
+    renderer.setClearColor('#3C3C3C');
+
+    // Cube setup with white material interacting with light
     const geometry = new THREE.BoxGeometry();
-    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    const material = new THREE.MeshPhongMaterial({ color: 0xffffff });
     const cube = new THREE.Mesh(geometry, material);
     scene.add(cube);
 
-    // Animation loop
+    // LIGHTS
+    const pointLight = new THREE.PointLight(0xffffff, 400);
+    pointLight.position.set(5, 5, 5);
+    scene.add(pointLight);
+
+    const ambientLight = new THREE.AmbientLight(0xffffff, .6);
+    scene.add(ambientLight);
+
+    // add grid
+    const gridHelper = new THREE.GridHelper(10, 10);
+    scene.add(gridHelper);
+
+
+
+
+
+
+    // ANIMATION LOOP
     const animate = function () {
       requestAnimationFrame(animate);
       cube.rotation.x += 0.01;
       cube.rotation.y += 0.01;
+      controls.update();
       renderer.render(scene, camera);
     };
     animate();
+
+
+
+
+
 
     // Cleanup function
     return () => {
       mount.removeChild(renderer.domElement);
     };
-  }, [width]); // Re-run effect when width changes
+  }, []); // Empty dependency array to run only once
 
   useEffect(() => {
     if (rendererRef.current && cameraRef.current) {
@@ -61,11 +100,9 @@ export default function ThreeScene() {
   const handleMouseDown = () => {
     isResizing.current = true;
   };
-
   const handleMouseUp = () => {
     isResizing.current = false;
   };
-
   const handleMouseMove = (event) => {
     if (isResizing.current) {
       const newWidth = event.clientX + 3;
@@ -76,7 +113,6 @@ export default function ThreeScene() {
   useEffect(() => {
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseup', handleMouseUp);
-
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
