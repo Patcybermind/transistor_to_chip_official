@@ -4,22 +4,27 @@ import * as THREE from 'three';
 
 export default function ThreeScene() {
   const mountRef = useRef(null);
-  const [height, setHeight] = useState(400); // Initial height
+  const [width, setWidth] = useState(0); // Initial width set to 0
   const isResizing = useRef(false);
   const rendererRef = useRef(null);
   const cameraRef = useRef(null);
+
+  useEffect(() => {
+    // Set initial width to 90% of the window's inner width
+    setWidth(window.innerWidth * 0.85);
+  }, []);
 
   useEffect(() => {
     const mount = mountRef.current;
 
     // Scene setup
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, mount.clientWidth / height, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(75, width / mount.clientHeight, 0.1, 1000);
     camera.position.z = 5;
     cameraRef.current = camera;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(mount.clientWidth, height);
+    renderer.setSize(width, mount.clientHeight);
     mount.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
@@ -42,16 +47,16 @@ export default function ThreeScene() {
     return () => {
       mount.removeChild(renderer.domElement);
     };
-  }, []); // only run once on mount
+  }, [width]); // Re-run effect when width changes
 
   useEffect(() => {
     if (rendererRef.current && cameraRef.current) {
       const mount = mountRef.current;
-      rendererRef.current.setSize(mount.clientWidth, height);
-      cameraRef.current.aspect = mount.clientWidth / height;
+      rendererRef.current.setSize(width, mount.clientHeight);
+      cameraRef.current.aspect = width / mount.clientHeight;
       cameraRef.current.updateProjectionMatrix();
     }
-  }, [height]);
+  }, [width]); // Re-run effect when width changes
 
   const handleMouseDown = () => {
     isResizing.current = true;
@@ -63,8 +68,8 @@ export default function ThreeScene() {
 
   const handleMouseMove = (event) => {
     if (isResizing.current) {
-      const newHeight = event.clientY;
-      setHeight(newHeight -20); // Subtract 10 to account for the height of the resize handle
+      const newWidth = event.clientX + 3;
+      setWidth(newWidth);
     }
   };
 
@@ -79,18 +84,18 @@ export default function ThreeScene() {
   }, []);
 
   return (
-    <div style={{ position: 'relative', width: '100%', height: `${height}px` }}>
+    <div style={{ position: 'relative', width: `${width}px`, height: '100vh' }}>
       <div ref={mountRef} style={{ width: '100%', height: '100%' }} />
       <div
         onMouseDown={handleMouseDown}
         style={{
           position: 'absolute',
-          bottom: 0,
-          left: 0,
-          width: '100%',
-          height: '10px',
-          cursor: 'ns-resize',
-          backgroundColor: 'rgba(255, 255, 255, 1)',
+          right: 0,
+          top: 0,
+          width: '6px',
+          height: '100%',
+          cursor: 'ew-resize',
+          backgroundColor: 'rgba(0, 255, 0, 1)',
         }}
       />
     </div>
