@@ -1,7 +1,9 @@
 "use client"
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useContext } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { SceneContext } from './SceneContext';
+
 
 export default function ThreeScene() {
   const mountRef = useRef(null);
@@ -11,16 +13,19 @@ export default function ThreeScene() {
   const cameraRef = useRef(null);
   const sceneRef = useRef(null);
 
+  const { scene } = useContext(SceneContext);
+
   useEffect(() => {
     // Set initial width to 90% of the window's inner width
     setWidth(window.innerWidth * 0.85);
   }, []);
+  
 
   useEffect(() => {
     const mount = mountRef.current;
 
     // SETUP
-    const scene = new THREE.Scene();
+    
     sceneRef.current = scene;
 
     const camera = new THREE.PerspectiveCamera(75, width / mount.clientHeight, 0.1, 1000);
@@ -48,7 +53,7 @@ export default function ThreeScene() {
     const geometry = new THREE.BoxGeometry();
     const material = new THREE.MeshPhongMaterial({ color: 0xffffff });
     const cube = new THREE.Mesh(geometry, material);
-    scene.add(cube);
+    //scene.add(cube);
 
     // LIGHTS
     const pointLight = new THREE.PointLight(0xffffff, 400);
@@ -61,6 +66,12 @@ export default function ThreeScene() {
     // add grid
     const gridHelper = new THREE.GridHelper(10, 10);
     scene.add(gridHelper);
+
+    // add axes
+    const axesHelper = new THREE.AxesHelper(5);
+    scene.add(axesHelper);
+
+    
 
 
 

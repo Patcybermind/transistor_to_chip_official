@@ -3,19 +3,44 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #2C2C2C;
+  --background: #2C2C2C;
+  --foreground: #ededed;
+  --selected: #fa7516;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #2C2C2C;
-    --foreground: #ededed;
-  }
-}
+
 
 body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.dropdownmenubutton {
+  background-color: var(--background);
+  color: var(--foreground);
+  @apply inline-flex justify-center w-full rounded-md  shadow-lg px-4 py-0.5 text-sm font-medium text-white hover:bg-orange-500 focus:outline-none
+}
+
+.dropdownmenubox {
+  background-color: var(--background);
+  color: var(--foreground);
+  @apply origin-top-right absolute left-0 mt-0  rounded-md w-40 shadow-lg ring-1 ring-black ring-opacity-5
+}
+
+.dropdownmenuitems {
+  background-color: var(--background);
+  color: var(--foreground);
+  @apply text-left block px-4  w-40 text-sm  hover:bg-gray-100
+  
+}
+.dropdownmenuitems:hover {
+  background-color: var(--background);
+  color: var(--foreground);
+  @apply text-left block px-4  w-40 text-sm  
+}
+.dropdownmenuitems:hover {
+  background-color: var(--selected);
+  
+  
 }
