@@ -2,22 +2,37 @@
 import { SceneContext } from './SceneContext';
 import React, { useState, useContext } from 'react';
 import { ProtoBoard } from "./Parts"
+import { PopupComponent } from './UiComponents';
 
 
 
 
 
 
+export function AddProtoBoardFromDropdown({ scene, onClose }) {
+    const [width, setWidth] = useState(5);
+    const [length, setLength] = useState(50);
 
-export function AddProtoBoardFromDropdown(scene) {
-    
+    const handleOkClick = () => {
+        console.log("Adding ProtoBoard from dropdown");
+        let protoBoard = new ProtoBoard();
+        protoBoard.setWidth(width);
+        protoBoard.setLength(length);
+        scene.add(protoBoard.addProtoBoardToScene());
+        onClose();
+    };
 
-    console.log("Adding ProtoBoard from dropdown");
-    // Add ProtoBoard to scene
-    let protoBoard = new ProtoBoard();
-    protoBoard.setWidth(5);
-    protoBoard.setLength(50);
-    scene.add(protoBoard.addProtoBoardToScene());
-
-    
+    return (
+        <PopupComponent>
+            <div>
+                <label>Width:</label>
+                <input type="number" value={width} onChange={(e) => setWidth(e.target.value)} />
+            </div>
+            <div>
+                <label>Length:</label>
+                <input type="number" value={length} onChange={(e) => setLength(e.target.value)} />
+            </div>
+            <button onClick={handleOkClick}>OK</button>
+        </PopupComponent>
+    );
 }

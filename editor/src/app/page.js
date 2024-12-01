@@ -1,21 +1,29 @@
+"use client"
+import React, { useState } from 'react';
 import ThreeScene from '../components/ThreeScene';
-//import './styles.css'; // Import the CSS file
 import { AddDropdown } from '../components/AddDropdown';
-import { FileDropdown } from '../components/FileDropdown'
-import React from 'react';
+import { FileDropdown } from '../components/FileDropdown';
 import { SceneProvider } from '../components/SceneContext';
 import Script from 'next/script';
+import { Popup, PopupComponent } from '../components/UiComponents';
 
 export default function Home() {
+
+
   return (
     <SceneProvider>
+      <div id="root"></div>
+      <div id="popup-container"></div>
+
       <div>
         <ThreeScene />
         <div className="absolute top-0 flex space-x-4 p-4">
           <FileDropdown />
           <AddDropdown />
+          
         </div>
       </div>
+      
       <Script
         src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"
         strategy="beforeInteractive"
@@ -27,4 +35,3 @@ export default function Home() {
     </SceneProvider>
   );
 }
-

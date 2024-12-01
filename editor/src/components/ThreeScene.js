@@ -56,11 +56,11 @@ export default function ThreeScene() {
     //scene.add(cube);
 
     // LIGHTS
-    const pointLight = new THREE.PointLight(0xffffff, 400);
-    pointLight.position.set(5, 5, 5);
-    scene.add(pointLight);
+    //const pointLight = new THREE.PointLight(0xffffff, 400);
+    //pointLight.position.set(5, 5, 5);
+    //scene.add(pointLight);
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, .6);
+    const ambientLight = new THREE.AmbientLight(0xffffff, .8);
     scene.add(ambientLight);
 
     // add grid
@@ -132,8 +132,11 @@ export default function ThreeScene() {
 
   return (
     <div style={{ position: 'relative', width: `${width}px`, height: '100vh' }}>
+      
       <div ref={mountRef} style={{ width: '100%', height: '100%' }} />
+      
       <div
+        
         onMouseDown={handleMouseDown}
         style={{
           position: 'absolute',
@@ -144,6 +147,7 @@ export default function ThreeScene() {
           cursor: 'ew-resize',
           backgroundColor: 'rgba(0, 255, 0, 1)',
         }}
+
       />
     </div>
   );
