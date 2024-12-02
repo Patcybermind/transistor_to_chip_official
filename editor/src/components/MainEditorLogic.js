@@ -11,7 +11,7 @@ import { PopupComponent } from './UiComponents';
 
 export function AddProtoBoardFromDropdown({ scene, onClose }) {
     const [width, setWidth] = useState(5);
-    const [length, setLength] = useState(50);
+    const [length, setLength] = useState(5);
 
     const handleOkClick = () => {
         console.log("Adding ProtoBoard from dropdown");
@@ -23,16 +23,22 @@ export function AddProtoBoardFromDropdown({ scene, onClose }) {
     };
 
     return (
-        <PopupComponent>
-            <div>
-                <label>Width:</label>
-                <input type="number" value={width} onChange={(e) => setWidth(e.target.value)} />
+        <div className="@apply popup-overlay">
+            <div className="@apply popup-content">
+            <h2 class="mb-3 text-xl">Add ProtoBoard</h2>
+            
+
+            <div class="@apply popupinputline">
+                <label class="mr-5">Width:</label>
+                <input class="@apply popupmenuinput" type="number" value={width} onChange={(e) => setWidth(e.target.value)} />
             </div>
-            <div>
+            <div class="@apply popupinputline">
                 <label>Length:</label>
-                <input type="number" value={length} onChange={(e) => setLength(e.target.value)} />
+                <input class="popupmenuinput" type="number" value={length} onChange={(e) => setLength(e.target.value)} />
             </div>
-            <button onClick={handleOkClick}>OK</button>
-        </PopupComponent>
+            <button class="@apply addprotoboardpopupokbutton" onClick={handleOkClick}>OK</button>
+
+            </div>
+        </div>
     );
 }
